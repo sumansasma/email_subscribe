@@ -1,87 +1,49 @@
 const express = require('express');
-const nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
+const nodemailer = require('nodemailer');
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Your list of subscribers
 const subscribers = [];
 
 // Configure your email service
 const transporter = nodemailer.createTransport({
-  service: 'gmail.com',
+  service: 'YourEmailService', // Replace with your email service (e.g., Gmail)
   auth: {
-    user: 'sijgeriaucssangha@gmail.com',
-    pass: 'cukc drra ypkd viay',
+    user: 'YourEmailAddress', // Replace with your email address
+    pass: 'YourEmailPassword', // Replace with your email password
   },
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Serve the HTML page
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
-
-// Handle form submission
+// Handle new subscriptions
 app.post('/subscribe', (req, res) => {
-  const email = req.body.email;
+  const { email } = req.body;
 
-  if (!subscribers.includes(email)) {
-    subscribers.push(email);
-  }
-  
-  const confirmationMailOptions = {
-    from: 'sijgeriaucssangha@gmail.com',
-    to: email,
-    subject: 'Subscription Confirmation',
-    text: 'You have successfully subscribed to our page. You will receive email notifications for updates.',
-  };
-
-  transporter.sendMail(confirmationMailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-      res.status(500).send('Error sending email.');
-    } else {
-      console.log('Email sent: ' + info.response);
+  if (email) {
+    // Check if the email is not already subscribed
+    if (!subscribers.includes(email)) {
+      subscribers.push(email); // Add the new subscriber's email to the list
     }
-  });
-  res.status(200).send('Subscription successful. You will receive email notifications.');
+
+    res.sendStatus(200); // Send a response indicating success
+  } else {
+    res.sendStatus(400); // Send a response indicating a bad request (missing email)
+  }
 });
 
-// Handle event creation
-app.post('/create-event', (req, res) => {
+// Handle event notifications
+app.post('/notify-event', (req, res) => {
   const eventDetails = req.body;
 
-  // Save the event to your database or storage mechanism
-
-  // Send event notifications to all subscribers
-  sendEventNotifications(eventDetails);
-
-  res.status(200).send('Event created and notifications sent.');
-});
-
-// Handle both GET and POST requests for /notify-event
-app.all('/notify-event', (req, res) => {
-  if (req.method === 'POST') {
-    // Handle POST request to trigger event notifications
-    const eventDetails = req.body;
-
-    // Send event notifications to all subscribers
-    sendEventNotifications(eventDetails);
-
-    res.status(200).send('Event notifications sent.');
-  } else {
-    // Handle GET request if needed
-    res.status(200).send('GET request received. This route is for POST requests.');
-  }
-});
-
-// Function to send event notifications to all subscribers
-function sendEventNotifications(eventDetails) {
+  // Send notifications to subscribers
   subscribers.forEach((subscriber) => {
     const eventMailOptions = {
-      from: 'sijgeriaucssangha@gmail.com',
+      from: 'YourEmailAddress', // Replace with your email address
       to: subscriber,
       subject: 'New Event Notification',
       text: `A new event has been created: ${eventDetails.title}\nDate: ${eventDetails.date}\nDescription: ${eventDetails.description}`,
@@ -95,8 +57,9 @@ function sendEventNotifications(eventDetails) {
       }
     });
   });
-}
 
+  res.sendStatus(200); // Send a response indicating success
+});
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
