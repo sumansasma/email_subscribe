@@ -62,6 +62,10 @@ app.post('/notify-event', (req, res) => {
   res.sendStatus(200); // Send a response indicating success
 });
 
+app.get('/subscribers', (req, res) => {
+  res.json(subscribers); // Return the list of subscribers as JSON
+});
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
