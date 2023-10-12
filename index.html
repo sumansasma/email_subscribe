@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Subscribe Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .container {
+            margin: 100px auto;
+            width: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Subscribe to Our Page</h1>
+        <p>Get notified through email when we have updates.</p>
+        <form id="subscribe-form" action="/subscribe" method="POST">
+            <input type="email" id="email" name="email" placeholder="Your Email" required>
+            <button type="submit">Subscribe</button>
+        </form>
+        <p id="message"></p>
+    </div>
+</body>
+</html>
