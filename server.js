@@ -10,10 +10,10 @@ const subscribers = [];
 
 // Configure your email service
 const transporter = nodemailer.createTransport({
-  service: 'YourEmailService', // Replace with your email service (e.g., Gmail)
+  service: 'gmail.com', // Replace with your email service (e.g., Gmail)
   auth: {
-    user: 'YourEmailAddress', // Replace with your email address
-    pass: 'YourEmailPassword', // Replace with your email password
+    user: 'sijgeriaucssangha@gmail.com', // Replace with your email address
+    pass: 'cukc drra ypkd viay', // Replace with your email password
   },
 });
 
@@ -43,7 +43,7 @@ app.post('/notify-event', (req, res) => {
   // Send notifications to subscribers
   subscribers.forEach((subscriber) => {
     const eventMailOptions = {
-      from: 'YourEmailAddress', // Replace with your email address
+      from: 'sijgeriaucssangha@gmail.com', // Replace with your email address
       to: subscriber,
       subject: 'New Event Notification',
       text: `A new event has been created: ${eventDetails.title}\nDate: ${eventDetails.date}\nDescription: ${eventDetails.description}`,
