@@ -15,6 +15,7 @@ const transporter = nodemailer.createTransport({
     user: 'sijgeriaucssangha@gmail.com', // Replace with your email address
     pass: 'cukc drra ypkd viay', // Replace with your email password
   },
+  debug: true,
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -51,7 +52,7 @@ app.post('/notify-event', (req, res) => {
 
     transporter.sendMail(eventMailOptions, (error, info) => {
       if (error) {
-        console.log(error);
+         console.error("Error sending email:", error);
       } else {
         console.log('Event notification email sent: ' + info.response);
       }
