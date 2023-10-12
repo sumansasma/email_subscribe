@@ -45,13 +45,20 @@ app.post('/subscribe', (req, res) => {
 });
 
 // Create a route to trigger event notifications
-app.post('/notify-event', (req, res) => {
-  const eventDetails = req.body;
+// Handle both GET and POST requests for /notify-event
+app.all('/notify-event', (req, res) => {
+  if (req.method === 'POST') {
+    // Handle POST request to trigger event notifications
+    const eventDetails = req.body;
 
-  // Send event notifications to all subscribers
-  sendEventNotifications(eventDetails);
+    // Send event notifications to all subscribers
+    sendEventNotifications(eventDetails);
 
-  res.status(200).send('Event notifications sent.');
+    res.status(200).send('Event notifications sent.');
+  } else {
+    // Handle GET request if needed
+    res.status(200).send('GET request received. This route is for POST requests.');
+  }
 });
 
 // Function to send event notifications to all subscribers
