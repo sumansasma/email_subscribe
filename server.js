@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 
 const app = express();
 const port = process.env.PORT || 3000;
+const subscribers = [];
 
 // Configure your email service
 const transporter = nodemailer.createTransport({
@@ -26,14 +27,18 @@ app.get('/', (req, res) => {
 app.post('/subscribe', (req, res) => {
   const email = req.body.email;
 
-  const mailOptions = {
+  if (!subscribers.includes(email)) {
+    subscribers.push(email);
+  }
+  
+  const confirmationMailOptions = {
     from: 'sijgeriaucssangha@gmail.com',
     to: email,
     subject: 'Subscription Confirmation',
     text: 'You have successfully subscribed to our page. You will receive email notifications for updates.',
   };
 
-  transporter.sendMail(mailOptions, (error, info) => {
+  transporter.sendMail(confirmationMailOptions, (error, info) => {
     if (error) {
       console.log(error);
       res.status(500).send('Error sending email.');
@@ -44,7 +49,18 @@ app.post('/subscribe', (req, res) => {
   });
 });
 
-// Create a route to trigger event notifications
+// Handle event creation
+app.post('/create-event', (req, res) => {
+  const eventDetails = req.body;
+
+  // Save the event to your database or storage mechanism
+
+  // Send event notifications to all subscribers
+  sendEventNotifications(eventDetails);
+
+  res.status(200).send('Event created and notifications sent.');
+});
+
 // Handle both GET and POST requests for /notify-event
 app.all('/notify-event', (req, res) => {
   if (req.method === 'POST') {
@@ -65,7 +81,7 @@ app.all('/notify-event', (req, res) => {
 function sendEventNotifications(eventDetails) {
   subscribers.forEach((subscriber) => {
     const eventMailOptions = {
-      from: 'YourEmailAddress',
+      from: 'sijgeriaucssangha@gmail.com',
       to: subscriber,
       subject: 'New Event Notification',
       text: `A new event has been created: ${eventDetails.title}\nDate: ${eventDetails.date}\nDescription: ${eventDetails.description}`,
@@ -78,7 +94,7 @@ function sendEventNotifications(eventDetails) {
         console.log('Event notification email sent: ' + info.response);
       }
     });
-  });
+  }
 }
 
 
