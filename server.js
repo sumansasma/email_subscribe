@@ -44,9 +44,9 @@ app.post('/subscribe', (req, res) => {
       res.status(500).send('Error sending email.');
     } else {
       console.log('Email sent: ' + info.response);
-      res.status(200).send('Subscription successful. You will receive email notifications.');
     }
   });
+  res.status(200).send('Subscription successful. You will receive email notifications.');
 });
 
 // Handle event creation
