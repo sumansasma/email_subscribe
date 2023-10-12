@@ -44,6 +44,37 @@ app.post('/subscribe', (req, res) => {
   });
 });
 
+// Create a route to trigger event notifications
+app.post('/notify-event', (req, res) => {
+  const eventDetails = req.body;
+
+  // Send event notifications to all subscribers
+  sendEventNotifications(eventDetails);
+
+  res.status(200).send('Event notifications sent.');
+});
+
+// Function to send event notifications to all subscribers
+function sendEventNotifications(eventDetails) {
+  subscribers.forEach((subscriber) => {
+    const eventMailOptions = {
+      from: 'YourEmailAddress',
+      to: subscriber,
+      subject: 'New Event Notification',
+      text: `A new event has been created: ${eventDetails.title}\nDate: ${eventDetails.date}\nDescription: ${eventDetails.description}`,
+    };
+
+    transporter.sendMail(eventMailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Event notification email sent: ' + info.response);
+      }
+    });
+  });
+}
+
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
