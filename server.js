@@ -94,6 +94,7 @@ function sendEventNotifications(eventDetails) {
         console.log('Event notification email sent: ' + info.response);
       }
     });
+  }
 }
 
 
